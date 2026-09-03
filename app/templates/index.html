@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Scraper Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: sans-serif;
+            background: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background: #1a1a2e;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+        }
+
+        .controls {
+            padding: 20px 40px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .controls input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            width: 220px;
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn-search {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        .btn-scrape {
+            background: #e94560;
+            color: white;
+        }
+
+        .count {
+            padding: 0 40px 10px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            padding: 0 40px 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+
+        .card .company {
+            color: #e94560;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .card .meta {
+            color: #888;
+            font-size: 0.85rem;
+            margin-top: 6px;
+        }
+
+        .card a {
+            display: inline-block;
+            margin-top: 12px;
+            color: #1a1a2e;
+            font-size: 0.85rem;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .card a:hover {
+            text-decoration: underline;
+        }
+
+        .empty {
+            padding: 40px;
+            text-align: center;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Job Scraper Dashboard</h1>
+    </header>
+
+    <div class="controls">
+        <form method="GET" action="/" style="display:flex; gap:12px; flex-wrap:wrap;">
+            <input type="text" name="search" placeholder="Job title..." value="{{ search }}">
+            <input type="text" name="location" placeholder="Location..." value="{{ location }}">
+            <button type="submit" class="btn-search">Search</button>
+        </form>
+        <a href="/scrape"><button class="btn-scrape">Scrape New Jobs</button></a>
+    </div>
+
+    <div class="count">{{ jobs|length }} job(s) found</div>
+
+    <div class="grid">
+        {% if jobs %}
+        {% for job in jobs %}
+        <div class="card">
+            <h3>{{ job["title"] }}</h3>
+            <div class="company">{{ job["company"] }}</div>
+            <div class="meta">{{ job["location"] }} · {{ job["date_posted"] }} · {{ job["source"] }}</div>
+            <a href="{{ job['url'] }}" target="_blank">View Job →</a>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="empty">No jobs found. Hit "Scrape New Jobs" to get started.</div>
+        {% endif %}
+    </div>
+
+</body>
+
+</html>
